@@ -22,3 +22,42 @@ body:has(.adminShell) .siteHeader,body:has(.adminShell) .footer,body:has(.adminL
 .seoTabs{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 22px}.seoTabs button{border:1px solid #d8cbc5;background:#fff;padding:10px 14px;cursor:pointer}.seoTabs button.active{background:#743d45;color:#fff;border-color:#743d45}.seoStats{grid-template-columns:repeat(4,1fr)}.seoResourceGrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:22px}.seoResourceGrid>a{display:flex;flex-direction:column;gap:5px;padding:20px;background:#fff;border:1px solid #e4dad4;font:20px Georgia,serif}.seoResourceGrid>a span{font:11px Arial,sans-serif;color:#776b67}.seoPill{display:inline-flex;min-width:42px;justify-content:center;padding:5px 8px;border-radius:20px;background:#efe5c9;color:#6e591c;font-weight:700}.seoPill.great{background:#dce8dc;color:#36573b}.seoPill.good{background:#e3e8dc;color:#52613d}.seoPill.warn{background:#f1e3d7;color:#7b4f32}.tableSub{display:block;margin-top:3px;color:#9a8d88;font-size:10px}.seoScoreCard{display:grid;grid-template-columns:90px 1fr;gap:18px;align-items:start;margin-bottom:22px;padding:20px;background:#faf6f2;border:1px solid #e5d9d2}.seoScoreNumber{width:76px;height:76px;border-radius:50%;display:flex;align-items:baseline;justify-content:center;gap:2px;padding-top:20px;background:#eee4dc;color:#743d45}.seoScoreNumber b{font:30px Georgia,serif}.seoScoreNumber span{font-size:10px}.seoScoreCard p{margin:4px 0 0;color:#776b67;font-size:12px}.seoScoreCard ul{margin:10px 0 0;padding-left:18px;color:#685b57;font-size:12px}.scoreExcellent .seoScoreNumber{background:#dce8dc;color:#36573b}.scorePoor .seoScoreNumber{background:#f3dddd;color:#7c343b}.faqEditor{margin:18px 0 24px}.faqRow{display:grid;grid-template-columns:1fr;gap:8px;padding:16px;margin:10px 0;background:#faf7f4;border:1px solid #e7ddd8}.faqRow input,.faqRow textarea{width:100%;padding:11px;border:1px solid #d9ccc5}.compactForm{margin-bottom:24px}.adminTable code{font-size:11px;background:#f5f0ec;padding:3px 5px}.seoRecordEditor{max-width:1040px}.adminGrid3{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 @media(max-width:1000px){.seoStats,.seoResourceGrid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.seoStats,.seoResourceGrid,.adminGrid3{grid-template-columns:1fr}.seoScoreCard{grid-template-columns:1fr}.seoScoreNumber{width:68px;height:68px}}
+
+/* V4.0.3 admin navigation overflow fix: keep long menus inside the dark sidebar. */
+@media (min-width: 851px) {
+  .adminShell { align-items: start; min-height: 100vh; }
+  .adminNav {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+  .adminNav .adminBrand, .adminNav .adminUser { flex-shrink: 0; }
+  .adminNav nav {
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: start;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: #766368 #2f2929;
+  }
+  .adminNav nav a { display: block; }
+  .adminNav > button {
+    position: static;
+    flex: 0 0 auto;
+    width: 100%;
+    margin-top: 12px;
+  }
+}
+@media (max-width: 850px) {
+  .adminNav { position: relative; height: auto; min-height: 0; overflow: visible; }
+  .adminNav nav { max-height: 48vh; overflow-y: auto; overscroll-behavior: contain; }
+  .adminNav > button { position: static; width: 100%; margin-top: 16px; }
+}
