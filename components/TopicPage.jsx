@@ -1,0 +1,9 @@
+import {getTopic,getPublishedPosts} from '../lib/content';
+import StoryCard from './StoryCard';
+import JsonLd from './JsonLd';
+import Breadcrumbs from './Breadcrumbs';
+import {collectionJsonLd,breadcrumbsJsonLd,faqJsonLd} from '../lib/seo';
+export default async function TopicPage({slug}){
+ const t=await getTopic(slug);if(!t)return null;const posts=await getPublishedPosts({category:t.title});const faqs=Array.isArray(t.faq_items)?t.faq_items.filter(x=>x?.question&&x?.answer):[];
+ return <><JsonLd data={[collectionJsonLd(t,`/${slug}`),breadcrumbsJsonLd([{name:'Home',url:'/'},{name:t.breadcrumb_title||t.title,url:`/${slug}`}]),faqJsonLd(faqs)]}/><Breadcrumbs items={[{name:'Home',url:'/'},{name:t.breadcrumb_title||t.title,url:`/${slug}`} ]}/><section className="topicHero"><div className="topicInner">{t.hero_image&&<img className="topicHeroImage" src={t.hero_image} alt=""/>}<div className="topicSymbol">{t.symbol}</div><small>{t.title}</small><h1>{t.headline}</h1><p className="topicIntro">{t.intro}</p><div className="topicQuote"><p>{t.quote}</p></div><div className="topicPrompts">{(t.prompts||[]).slice(0,3).map((p,i)=><div key={p}><b>{['Remember','Notice','Choose'][i]}</b>{p}</div>)}</div></div></section><section className="section"><div className="wrap"><div className="heading"><small>From The Heart</small><h2>More {t.title} reflections</h2></div><div className="storyGrid">{posts.length?posts.map(p=><StoryCard key={p.id} story={p}/>):<div className="emptyState">More reflections are being written for this space.</div>}</div>{faqs.length>0&&<div className="topicFaq"><div className="heading"><small>Helpful Context</small><h2>Questions about {t.title.toLowerCase()}</h2></div>{faqs.map((f,i)=><details key={i}><summary>{f.question}</summary><p>{f.answer}</p></details>)}</div>}</div></section></>
+}

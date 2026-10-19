@@ -1,0 +1,13 @@
+'use client';
+import {useState} from 'react';
+import MediaPicker from './MediaPicker';
+const types=[['paragraph','Paragraph'],['h2','Heading 2'],['h3','Heading 3'],['quote','Quote'],['callout','Carry This With You'],['image','Image'],['divider','Divider']];
+const id=()=>globalThis.crypto?.randomUUID?.()||Math.random().toString(36).slice(2);
+export default function BlockEditor({value=[],onChange}){
+ const blocks=Array.isArray(value)?value:[],[picker,setPicker]=useState(null);
+ function update(i,patch){const next=[...blocks];next[i]={...next[i],...patch};onChange(next)}
+ function add(type){const block={id:id(),type,text:''};if(type==='callout')block.title='Carry This With You';if(type==='image'){block.url='';block.alt='';block.caption=''}onChange([...blocks,block])}
+ function remove(i){onChange(blocks.filter((_,x)=>x!==i))}
+ function move(i,dir){const j=i+dir;if(j<0||j>=blocks.length)return;const next=[...blocks],[item]=next.splice(i,1);next.splice(j,0,item);onChange(next)}
+ return <div className="blockEditor"><div className="blockToolbar"><span>Add block:</span>{types.map(([t,l])=><button type="button" key={t} onClick={()=>add(t)}>{l}</button>)}</div>{blocks.length===0&&<div className="blockEmpty">Start with a paragraph, heading, quote, image or callout.</div>}{blocks.map((b,i)=><div className={'contentBlock type-'+b.type} key={b.id||i}><div className="blockHead"><span>{types.find(x=>x[0]===b.type)?.[1]||b.type}</span><div><button type="button" onClick={()=>move(i,-1)}>↑</button><button type="button" onClick={()=>move(i,1)}>↓</button><button type="button" className="danger" onClick={()=>remove(i)}>Delete</button></div></div>{b.type==='divider'?<hr/>:b.type==='image'?<><div className="imageBlockRow"><input placeholder="Image URL" value={b.url||''} onChange={e=>update(i,{url:e.target.value})}/><button type="button" onClick={()=>setPicker(i)}>Choose Media</button></div>{b.url&&<img className="blockImagePreview" src={b.url} alt={b.alt||''}/>}<input placeholder="Alt text" value={b.alt||''} onChange={e=>update(i,{alt:e.target.value})}/><input placeholder="Caption (optional)" value={b.caption||''} onChange={e=>update(i,{caption:e.target.value})}/></>:<>{b.type==='callout'&&<input placeholder="Callout title" value={b.title||''} onChange={e=>update(i,{title:e.target.value})}/>}<textarea rows={b.type==='paragraph'?5:3} placeholder={b.type==='quote'?'Quote text':'Write here…'} value={b.text||''} onChange={e=>update(i,{text:e.target.value})}/><small>Inline formatting: **bold**, *italic*, [link text](/url)</small></>}</div>)}<MediaPicker open={picker!==null} onClose={()=>setPicker(null)} onSelect={m=>{if(picker!==null)update(picker,{url:m.public_url,alt:m.alt_text||'',caption:m.caption||''})}}/></div>
+}
