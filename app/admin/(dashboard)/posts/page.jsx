@@ -1,0 +1,2 @@
+import PostsManager from '../../../../components/admin/PostsManager';import {requireAdmin} from '../../../../lib/admin-auth';export const dynamic='force-dynamic';
+export default async function Page(){const {db,user,profile}=await requireAdmin('posts');let q=db.from('posts').select('id,title,category,status,featured,updated_at,author_id,scheduled_at,deleted_at').is('deleted_at',null).order('updated_at',{ascending:false});if(profile.role==='author')q=q.eq('author_id',user.id);const {data=[]}=await q;return <PostsManager initial={data} profile={profile}/>}

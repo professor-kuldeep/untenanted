@@ -1,0 +1,6 @@
+import {createHash} from 'crypto';
+import {createClient} from '@supabase/supabase-js';
+const ALLOWED=new Set(['mood_select','search','save_story','unsave_story','story_view','cta_click']);
+function cleanValue(type,value){let v=String(value||'').slice(0,180);if(type==='search'){v=v.replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi,'[email]').replace(/\+?\d[\d\s().-]{7,}\d/g,'[phone]')}return v}
+function anonymousHash(id=''){if(!id)return null;return createHash('sha256').update(String(id)+String(process.env.ANALYTICS_SALT||'uh-analytics')).digest('hex').slice(0,32)}
+export async function POST(req){try{const body=await req.json();if(!ALLOWED.has(body.event_type))return Response.json({ok:false},{status:400});const url=process.env.NEXT_PUBLIC_SUPABASE_URL,key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;if(!url||!key)return Response.json({ok:true,stored:false});const db=createClient(url,key,{auth:{persistSession:false,autoRefreshToken:false}});const {error}=await db.from('analytics_events').insert({event_type:body.event_type,event_value:cleanValue(body.event_type,body.event_value),anonymous_id:anonymousHash(body.anonymous_id),metadata:body.metadata||{}});return Response.json({ok:!error,stored:!error})}catch{return Response.json({ok:false},{status:400})}}

@@ -1,0 +1,1 @@
+export default function manifest(){return {name:'Untenanted Heart',short_name:'Untenanted Heart',description:'Words for the feelings you could not name.',start_url:'/',display:'standalone',background_color:'#f8f4ef',theme_color:'#743d45',icons:[{src:'/favicon.png',sizes:'any',type:'image/png'}]}}

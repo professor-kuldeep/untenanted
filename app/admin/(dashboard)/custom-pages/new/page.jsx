@@ -1,0 +1,1 @@
+import {requireAdmin} from '../../../../../lib/admin-auth';import PageBuilderEditor from '../../../../../components/admin/PageBuilderEditor';export default async function Page(){await requireAdmin('custom_pages');return <><div className="adminPageHead"><div><h1>New Page</h1><p>Build a page without touching code.</p></div></div><PageBuilderEditor/></>}
