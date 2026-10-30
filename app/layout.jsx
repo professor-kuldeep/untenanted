@@ -3,6 +3,9 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ServiceWorkerRegister from '../components/ServiceWorkerRegister';
 import JsonLd from '../components/JsonLd';
+import VisitTracker from '../components/VisitTracker';
+import ConsentBanner from '../components/ConsentBanner';
+import AnalyticsIntegrations from '../components/AnalyticsIntegrations';
 import {getSiteChrome} from '../lib/content';
 import {organizationJsonLd,websiteJsonLd} from '../lib/seo';
 
@@ -29,5 +32,6 @@ export async function generateMetadata(){
 export default async function RootLayout({children}){
   const {nav,settings}=await getSiteChrome();
   const style={'--accent':settings.accent||'#743d45','--bg':settings.background||'#f8f4ef','--paper':settings.paper||'#fffdf9'};
-  return <html lang="en"><body style={style}><JsonLd data={[organizationJsonLd(settings),websiteJsonLd(settings)]}/><Header navItems={nav} tagline={settings.tagline}/><main>{children}</main><Footer navItems={nav} tagline={settings.tagline} instagram={settings.instagram}/><ServiceWorkerRegister/></body></html>;
+  const consentRequired=settings.analytics_consent_required!==false&&settings.analytics_consent_required!=='false';
+  return <html lang="en"><body style={style}><JsonLd data={[organizationJsonLd(settings),websiteJsonLd(settings)]}/><AnalyticsIntegrations ga4Id={settings.analytics_ga4_measurement_id||''} consentRequired={consentRequired}/><VisitTracker consentRequired={consentRequired}/><Header navItems={nav} tagline={settings.tagline}/><main>{children}</main><Footer navItems={nav} tagline={settings.tagline} instagram={settings.instagram}/><ServiceWorkerRegister/><ConsentBanner required={consentRequired}/></body></html>;
 }
