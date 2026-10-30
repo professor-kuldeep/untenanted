@@ -1,15 +1,14 @@
 {
-  "name": "untenanted-heart-cms-v4",
-  "version": "4.0.3",
+  "name": "untenanted-heart-cms-v5",
+  "version": "5.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "check:env": "node scripts/check-env.mjs",
-    "seo:audit": "node scripts/seo-audit.mjs",
     "verify": "node scripts/verify-project.mjs",
-    "validate": "node scripts/verify-project.mjs"
+    "check:env": "node scripts/check-env.mjs",
+    "seo:audit": "node scripts/seo-audit.mjs"
   },
   "dependencies": {
     "@supabase/ssr": "0.12.7",

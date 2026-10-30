@@ -4,7 +4,7 @@ import {NextResponse} from 'next/server';
 async function findRedirect(request){
   if(!['GET','HEAD'].includes(request.method)) return null;
   const path=request.nextUrl.pathname;
-  if(path.startsWith('/admin')||path.startsWith('/account')||path.startsWith('/api')||path.startsWith('/_next')) return null;
+  if(path.startsWith('/admin')||path.startsWith('/account')||path.startsWith('/auth')||path.startsWith('/api')||path.startsWith('/_next')) return null;
   const url=process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key=process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
   if(!url||!key) return null;
@@ -51,7 +51,8 @@ export async function proxy(request,event){
     }
   }});
   const {data:{user}}=await supabase.auth.getUser();
-  if(request.nextUrl.pathname.startsWith('/admin')&&!request.nextUrl.pathname.startsWith('/admin/login')&&!user){
+  const publicAdminAuth=['/admin/login','/admin/forgot-password','/admin/reset-password'];
+  if(request.nextUrl.pathname.startsWith('/admin')&&!publicAdminAuth.includes(request.nextUrl.pathname)&&!user){
     const target=request.nextUrl.clone();target.pathname='/admin/login';return NextResponse.redirect(target);
   }
   return response;

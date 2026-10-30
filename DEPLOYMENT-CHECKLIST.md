@@ -1,9 +1,31 @@
-# Fresh GitHub + Vercel deployment
+# Untenanted Heart CMS V5.2 Deployment Checklist
 
-1. Upload the contents of this archive to the repository root (do not upload a containing folder).
-2. Configure Node.js 24.x in Vercel. Framework preset: Next.js. Root directory: repository root.
-3. Create a new Supabase project; run `supabase/schema.sql` in the SQL editor.
-4. Configure the environment variables listed in `.env.example` in Vercel, using values from your own new Supabase project. Do not commit secrets.
-5. Deploy. Admin screens that require Supabase will not work until the database and authentication are configured.
-6. Rollback of app code: Vercel > Deployments > previous successful deployment > Redeploy / Promote, or revert the GitHub commit. This does NOT roll back database data.
-7. Back up database data separately in Supabase before schema or content changes.
+- [ ] Repository root contains `app/`, `components/`, `lib/`, `public/`, `scripts/`, `supabase/`, `package.json`, `next.config.mjs` and `proxy.js`.
+- [ ] `package.json` shows version `5.2.0`, Next.js `16.4.2` and Node `24.x`.
+- [ ] Run `supabase/schema.sql` on the intended fresh V5.2 Supabase project.
+- [ ] Create `untenantedheart@gmail.com` in Supabase Authentication.
+- [ ] Run `credentials/FIRST-SUPER-ADMIN.sql`.
+- [ ] Configure Supabase production Site URL and password-reset redirect URLs.
+- [ ] Add required Vercel environment variables.
+- [ ] Confirm `SUPABASE_SERVICE_ROLE_KEY` is server-only and not committed to GitHub.
+- [ ] Set `NEXT_PUBLIC_SITE_URL` to the production URL.
+- [ ] Use a long random `ANALYTICS_SALT`.
+- [ ] Push a new commit to `main` and confirm Vercel deploys that commit.
+- [ ] Confirm Vercel shows `untenanted-heart-cms-v5@5.2.0 build` and runs `next build` directly.
+- [ ] Sign in at `/admin/login`.
+- [ ] Test `/admin/forgot-password` and `/account/forgot-password`.
+- [ ] Enroll and verify TOTP MFA from Admin → Security Center.
+- [ ] Sign out and confirm admin MFA challenge works on the next login.
+- [ ] Configure GA4 Measurement ID and consent preference if analytics is used.
+- [ ] Configure GA4 Property ID / GSC property URL if CMS Google reporting is wanted.
+- [ ] Add Google service-account credentials to Vercel only if GA4/GSC API reporting is wanted.
+- [ ] Grant that service account read access to the matching GA4 and Search Console properties.
+- [ ] Check Admin → Traffic & Search for first-party visits/sources/campaigns/pages/devices.
+- [ ] Download a Safe Backup and store it securely.
+- [ ] If using Full Backup, treat it as sensitive because it can contain member/submission data.
+- [ ] Check Admin → System Health.
+- [ ] Test `/api/health` and confirm no secret values are returned.
+- [ ] Check `/sitemap.xml`, `/robots.txt`, `/feed.xml` and `/llms.txt`.
+- [ ] Test public forms and confirm attribution appears in the CMS where expected.
+- [ ] Test desktop and mobile layouts.
+- [ ] Connect the final production domain.
